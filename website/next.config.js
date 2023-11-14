@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	output: "export",
 	basePath: "/web-client",
 	images: {
 		loader: "custom",
