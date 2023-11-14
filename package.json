@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "src/index.d.ts",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --json --outputFile=.github/tests/test-summary.json",
     "build": "tsc"
   },
   "files": [
