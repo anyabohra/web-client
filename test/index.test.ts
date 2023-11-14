@@ -7,7 +7,7 @@ describe("Testing Client", () => {
 	test("Discovery URL is a 404 and returns an error", async () => {
 
 		fetchMock = jest.spyOn(global, "fetch")
-				.mockImplementation(async () => {
+				.mockImplementationOnce(async () => {
 					return {
 						ok: true,
 						status: 404,
@@ -25,7 +25,7 @@ describe("Testing Client", () => {
 	test("Discovery URL is not a valid JSON file", async () => {
 
 		fetchMock = jest.spyOn(global, "fetch")
-				.mockImplementation(async () => {
+				.mockImplementationOnce(async () => {
 					return {
 						ok: true,
 						status: 200,
@@ -68,7 +68,7 @@ describe("Testing Client", () => {
 				.mockImplementationOnce(async () => {})
 
 		const getMetadataMock = jest.spyOn(Client.prototype, "getMetadata")
-				.mockImplementation(async () : Promise<any> => {
+				.mockImplementationOnce(async () : Promise<any> => {
 					return {
 						director_endpoint: "https://example.com"
 					}
@@ -76,7 +76,7 @@ describe("Testing Client", () => {
 
 		// Mock the file request
 		fetchMock = jest.spyOn(global, "fetch")
-				.mockImplementation(async () => {
+				.mockImplementationOnce(async () => {
 					return {
 						ok: true,
 						status: 200,
