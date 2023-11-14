@@ -32,4 +32,4 @@ try {
 
 Example usage can be found here: 
 
-https://github.com/PelicanPlatform/web-client/blob/main/src/app/page.tsx
+https://github.com/PelicanPlatform/web-client/blob/main/website/src/app/page.tsx
