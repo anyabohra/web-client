@@ -5,8 +5,8 @@ import {ThemeProviderClient} from "../../public/theme";
 import styles from "./page.module.css"
 
 export const metadata = {
-  title: 'Pelican Platform',
-  description: 'Software designed to make data distribution easy',
+  title: 'Example Web Client',
+  description: 'Example web client used to interact with the Pelican Platform',
 }
 
 export default function RootLayout({
