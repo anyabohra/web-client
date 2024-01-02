@@ -35,10 +35,11 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: Build with Next.js
+      - name: Run Tests
         run: npm run test
 
       - name: Update Coverage
+        if: always()
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
