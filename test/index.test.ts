@@ -105,7 +105,7 @@ describe("Testing Client", () => {
 		ClientFunctions.downloadUrl(testBlobUrl, testFileName)
 
 		expect(createElementSpy).toBeCalledWith('a');
-		expect(mLink.setAttribute.mock.calls.length).toBe(2);
+		expect(mLink.setAttribute.mock.calls.length).toBe(3);
 		expect(mLink.setAttribute.mock.calls[0]).toEqual(['href', testBlobUrl]);
 		expect(mLink.setAttribute.mock.calls[1]).toEqual(['download', testFileName]);
 		expect(mLink.style.display).toBe('none');
@@ -124,7 +124,7 @@ describe("Testing Client", () => {
 		ClientFunctions.downloadUrl(testBlobUrl)
 
 		expect(createElementSpy).toBeCalledWith('a');
-		expect(mLink.setAttribute.mock.calls.length).toBe(2);
+		expect(mLink.setAttribute.mock.calls.length).toBe(3);
 		expect(mLink.setAttribute.mock.calls[0]).toEqual(['href', testBlobUrl]);
 		expect(mLink.setAttribute.mock.calls[1]).toEqual(['download', '']);
 		expect(mLink.style.display).toBe('none');
