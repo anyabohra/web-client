@@ -64,7 +64,7 @@ describe("Testing Client", () => {
 
 		window.URL.createObjectURL = jest.fn(() => "blobUrl")
 
-		const downloadBlobMock = jest.spyOn(ClientFunctions, "downloadBlob")
+		const downloadUrlMock = jest.spyOn(ClientFunctions, "downloadUrl")
 				.mockImplementationOnce(async () => {})
 
 		const getMetadataMock = jest.spyOn(Client.prototype, "getMetadata")
@@ -89,7 +89,7 @@ describe("Testing Client", () => {
 		// Mock the download
 		let client = new Client("https://example.com")
 		await client.getFile(testFilePath)
-		expect(downloadBlobMock).toHaveBeenCalledWith("blobUrl", testFileName)
+		expect(downloadUrlMock).toHaveBeenCalledWith("https://example.com" + testFilePath)
 	})
 
 	test("Download file creates an a tag with the blob url and clicks it", async () => {
@@ -102,12 +102,31 @@ describe("Testing Client", () => {
 		document.body.appendChild = jest.fn();
 		document.body.removeChild = jest.fn();
 
-		ClientFunctions.downloadBlob(testBlobUrl, testFileName)
+		ClientFunctions.downloadUrl(testBlobUrl, testFileName)
 
 		expect(createElementSpy).toBeCalledWith('a');
 		expect(mLink.setAttribute.mock.calls.length).toBe(2);
 		expect(mLink.setAttribute.mock.calls[0]).toEqual(['href', testBlobUrl]);
 		expect(mLink.setAttribute.mock.calls[1]).toEqual(['download', testFileName]);
+		expect(mLink.style.display).toBe('none');
+		expect(mLink.click).toBeCalled();
+	})
+
+	test("Download file a tag sets a default download value of ''", async () => {
+
+		const testBlobUrl = "blobUrl"
+
+		const mLink = { href: '', click: jest.fn(), download: '', style: { display: '' }, setAttribute: jest.fn() } as any;
+		const createElementSpy = jest.spyOn(document, 'createElement').mockReturnValueOnce(mLink);
+		document.body.appendChild = jest.fn();
+		document.body.removeChild = jest.fn();
+
+		ClientFunctions.downloadUrl(testBlobUrl)
+
+		expect(createElementSpy).toBeCalledWith('a');
+		expect(mLink.setAttribute.mock.calls.length).toBe(2);
+		expect(mLink.setAttribute.mock.calls[0]).toEqual(['href', testBlobUrl]);
+		expect(mLink.setAttribute.mock.calls[1]).toEqual(['download', '']);
 		expect(mLink.style.display).toBe('none');
 		expect(mLink.click).toBeCalled();
 	})

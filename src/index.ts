@@ -28,32 +28,21 @@ export default class Client {
 	async getFile(path: string) : Promise<void> {
 		const metadata = await this.getMetadata()
 
-		if(!metadata.director_endpoint){
+		if (!metadata.director_endpoint) {
 			throw new Error("Metadata does not contain director_endpoint")
 		}
 
 		let url = `${metadata.director_endpoint}${path}`
-		let response = await fetch(url, {redirect: "follow"})
 
-		if(response.status !== 200){
-			throw new Error(`Cache endpoint returned ${response.status}: ` + url)
-		}
-
-		try {
-			const blob = await response.blob()
-			let blobUrl = window.URL.createObjectURL(blob);
-			let fileName = path.split("/").pop() || "file.txt"
-			await exports.downloadBlob(blobUrl, fileName)
-		} catch (e) {
-			throw new Error(`Cache endpoint returned invalid data: ` + url)
-		}
+		exports.downloadUrl(url)
 	}
 }
 
-export function downloadBlob(blobUrl: string, fileName: string) {
+export function downloadUrl(url: string, download: string = "") {
 	let a = document.createElement("a")
-	a.setAttribute('href', blobUrl)
-	a.setAttribute("download", fileName)
+	a.setAttribute('href', url)
+	a.setAttribute("download", download)
+	a.setAttribute('target', "_blank")
 	a.style.display = 'none';
 	a.click()
 }
