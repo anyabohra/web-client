@@ -14,6 +14,7 @@
     "@mui/material": "^5.14.18",
     "@pelicanplatform/web-client": "0.0.3-beta.2",
     "next": "14.0.2",
+    "next-image-export-optimizer": "^1.12.2",
     "react": "^18",
     "react-dom": "^18"
   },
