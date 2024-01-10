@@ -42,7 +42,13 @@ export default function Home() {
 
     if(!isValid) return;
 
-    const webClient = new Client(federationNamespace?.value!);
+    let webClient: Client;
+    if(!federationNamespace?.value.startsWith("https://")){
+      webClient = new Client("https://" + federationNamespace?.value!);
+    } else {
+      webClient = new Client(federationNamespace?.value!);
+    }
+
     try {
       await webClient.getFile(filePath)
     } catch (e) {
