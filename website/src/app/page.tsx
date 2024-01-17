@@ -23,7 +23,7 @@ export default function Home() {
 
   let [federationNamespace, setFederationNamespace] = useState<FederationName | undefined>({label: "OSDF", value: "https://osg-htc.org"});
   let [federationNamespaceError, setFederationNamespaceError] = useState<string | undefined>(undefined);
-  let [filePath, setFilePath] = useState<string>("/chtc/PUBLIC/bbockelm/pelican.png");
+  let [filePath, setFilePath] = useState<string>("/ospool/uc-shared/public/OSG-Staff/test.txt");
   let [filePathError, setFilePathError] = useState<string | undefined>(undefined);
 
   let [submitError, setSubmitError] = useState<string | undefined>(undefined);
