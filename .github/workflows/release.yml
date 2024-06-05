@@ -3,8 +3,8 @@ name: Publish to npm
 on:
   push:
     tags:
-      - 'v*.*.*'
-      - 'v*.*.*-beta.*'
+      - '*.*.*'
+      - '*.*.*-beta.*'
 
 permissions:
   contents: write
@@ -49,7 +49,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Pre Release: Update npm version"
-          branch: ${{ steps.set_branch.outputs.branch }} //might be able to remove
+          file_pattern: "."
 
       - name: Reset the tag to the newest commit
         run: |
