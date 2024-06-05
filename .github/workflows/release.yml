@@ -17,17 +17,10 @@ jobs:
       tag: ${{ steps.extract_tag.outputs.tag }}
     steps:
 
-      - name: Set Branch
-        id: set_branch
-        run: |
-          echo "branch=${GITHUB_REF_NAME%.*}.x" >> $GITHUB_OUTPUT
-          echo "Branch set to: ${GITHUB_REF_NAME%.*}.x"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ steps.set_branch.outputs.branch }}
       - name: Check Branch Checkout
         run: |
           echo: "Current branch: $(git branch)"
@@ -40,7 +33,6 @@ jobs:
 
       - name: Update npm version
         run: |
-          cd web_ui/frontend
           echo "Current directory: $(pwd)"
           echo "Directory contents: $(ls -la)
           # Get the current tag and set the package.json version to it
@@ -52,7 +44,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Pre Release: Update npm version"
-          branch: ${{ steps.set_branch.outputs.branch }}
+          branch: ${{ steps.set_branch.outputs.branch }} //might be able to remove
 
       - name: Reset the tag to the newest commit
         run: |
@@ -70,30 +62,3 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
 
-  publish:
-    needs: [pre-release]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Directory contents: $(ls -la)"
-          npm install
-
-      - name: Publish to npm
-        run: |
-          echo "Publishing package..."
-          npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      
-      
