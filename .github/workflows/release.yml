@@ -21,12 +21,18 @@ jobs:
         id: set_branch
         run: |
           echo "branch=${GITHUB_REF_NAME%.*}.x" >> $GITHUB_OUTPUT
+          echo "Branch set to: ${GITHUB_REF_NAME%.*}.x"
 
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ steps.set_branch.outputs.branch }}
+      - name: Check Branch Checkout
+        run: |
+          echo: "Current branch: $(git branch)"
+          echo "Git status: $(git status)"
+          echo "Git log: $(git log -1)"
 
       - uses: actions/setup-node@v4
         with:
@@ -35,7 +41,8 @@ jobs:
       - name: Update npm version
         run: |
           cd web_ui/frontend
-
+          echo "Current directory: $(pwd)"
+          echo "Directory contents: $(ls -la)
           # Get the current tag and set the package.json version to it
           npm version ${GITHUB_REF_NAME:1}
 
@@ -77,10 +84,15 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Directory contents: $(ls -la)"
+          npm install
 
       - name: Publish to npm
-        run: npm publish
+        run: |
+          echo "Publishing package..."
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
