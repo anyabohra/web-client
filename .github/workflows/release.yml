@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
       - name: Check Branch Checkout
         run: |
-          echo: "Current branch: $(git branch)"
+          echo "Current branch: $(git branch)"
           echo "Git status: $(git status)"
           echo "Git log: $(git log -1)"
 
