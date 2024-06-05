@@ -3,8 +3,8 @@ name: Publish to npm
 on:
   push:
     tags:
-      - '*.*.*'
-      - '*.*.*-beta.*'
+      - 'v*.*.*'
+      - 'v*.*.*-beta.*'
 
 permissions:
   contents: write
