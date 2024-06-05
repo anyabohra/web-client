@@ -51,6 +51,10 @@ jobs:
           commit_message: "Pre Release: Update npm version"
           file_pattern: "."
 
+      - name: Push changes to the branch
+        run: |
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
+
       - name: Reset the tag to the newest commit
         run: |
 
