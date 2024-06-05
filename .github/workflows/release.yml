@@ -28,7 +28,6 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ steps.set_branch.outputs.branch }}
-          continue-on-error: true
       - name: Check Branch Checkout
         run: |
           echo: "Current branch: $(git branch)"
