@@ -34,7 +34,7 @@ jobs:
       - name: Update npm version
         run: |
           echo "Current directory: $(pwd)"
-          echo "Directory contents: $(ls -la)
+          echo "Directory contents: $(ls -la)"
           # Get the current tag and set the package.json version to it
           npm version ${GITHUB_REF_NAME:1}
 
