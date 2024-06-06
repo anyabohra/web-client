@@ -56,6 +56,9 @@ jobs:
         with:
           commit_message: "Pre Release: Update npm version"
           file_pattern: "."
+          branch: ${GITHUB_REF_NAME:1}
+          create_branch: true
+          
 
       - name: Push changes to the branch
         run: |
