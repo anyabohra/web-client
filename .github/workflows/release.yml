@@ -17,6 +17,9 @@ jobs:
       tag: ${{ steps.extract_tag.outputs.tag }}
     steps:
 
+      - name: Set branch
+        id: set_branch
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
