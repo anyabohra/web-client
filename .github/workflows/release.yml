@@ -37,6 +37,11 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
+      - name: Extract tag name
+        id: extract_tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
+
       - name: Update npm version
         run: |
           echo "Current directory: $(pwd)"
@@ -47,15 +52,21 @@ jobs:
           # Add some verbosity
           echo "NPM version is now $(npm version)"
 
+      - name: Create temporary branch
+        run: |
+          TEMP_BRANCH="temp-branch-${{ github.run_id }}"
+          git checkout -b $TEMP_BRANCH
+
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Pre Release: Update npm version"
           file_pattern: "."
 
-      - name: Push changes to the branch
+      - name: Push changes to the temporary branch
         run: |
-          git push origin HEAD:${GITHUB_REF#refs/heads/}
-
+          TEMP_BRANCH="temp-branch-${{ github.run_id }}"
+          git push origin $TEMP_BRANCH
+      
       - name: Reset the tag to the newest commit
         run: |
 
@@ -66,9 +77,6 @@ jobs:
           # Create and push the new tag
           git tag ${GITHUB_REF_NAME}
           git push origin --tags
+          git push origin --delete $TEMP_BRANCH
 
-      - name: Extract tag name
-        id: extract_tag
-        if: startsWith(github.ref, 'refs/tags/')
-        run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
-
+      
