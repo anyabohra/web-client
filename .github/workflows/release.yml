@@ -25,7 +25,7 @@ jobs:
           
       - name: Check Branch Checkout
         run: |
-          echo "Current branch: $(git branch)"
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
           echo "Git status: $(git status)"
           echo "Git log: $(git log -1)"
           
@@ -61,6 +61,7 @@ jobs:
           # Delete the previous tag
           git tag --delete ${GITHUB_REF_NAME}
           git push origin :refs/tags/${GITHUB_REF_NAME}
+          
           # Create and push the new tag
           git tag ${GITHUB_REF_NAME}
           git push origin --tags
