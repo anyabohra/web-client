@@ -22,12 +22,13 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
+          
       - name: Check Branch Checkout
         run: |
           echo "Current branch: $(git branch)"
           echo "Git status: $(git status)"
           echo "Git log: $(git log -1)"
-
+          
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -36,47 +37,35 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-
-      - name: Extract tag name
-        id: extract_tag
-        if: startsWith(github.ref, 'refs/tags/')
-        run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
-
+          
       - name: Update npm version
         run: |
           echo "Current directory: $(pwd)"
           echo "Directory contents: $(ls -la)"
           # Get the current tag and set the package.json version to it
           npm version ${GITHUB_REF_NAME:1} --no-git-tag-version
-
           # Add some verbosity
           echo "NPM version is now $(npm version)"
-
-      - name: Create temporary branch
-        run: |
-          TEMP_BRANCH="temp-branch-${{ github.run_id }}"
-          git checkout -b $TEMP_BRANCH
-
+          
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Pre Release: Update npm version"
           file_pattern: "."
 
-      - name: Push changes to the temporary branch
+      - name: Push changes to the branch
         run: |
-          TEMP_BRANCH="temp-branch-${{ github.run_id }}"
-          git push origin $TEMP_BRANCH
-      
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
+          
       - name: Reset the tag to the newest commit
         run: |
-
           # Delete the previous tag
           git tag --delete ${GITHUB_REF_NAME}
           git push origin :refs/tags/${GITHUB_REF_NAME}
-
           # Create and push the new tag
           git tag ${GITHUB_REF_NAME}
           git push origin --tags
-          git push origin --delete $TEMP_BRANCH
-
-      
+          
+      - name: Extract tag name
+        id: extract_tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
