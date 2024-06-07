@@ -17,11 +17,6 @@ jobs:
       tag: ${{ steps.extract_tag.outputs.tag }}
     steps:
 
-      - name: Set branch
-        id: set_branch
-        run: |
-          echo "branch=${GITHUB_REF_NAME%.*}.x" >> $GITHUB_OUTPUT
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -38,11 +33,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Set up Git user
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          
       - name: Update npm version
         run: |
           echo "Current directory: $(pwd)"
@@ -56,14 +46,9 @@ jobs:
         with:
           commit_message: "Pre Release: Update npm version"
           file_pattern: "."
-          branch: ${{ GITHUB_REF }}
+          branch: ${{ env.GITHUB_REF_NAME }}
           create_branch: true
-          
 
-      - name: Push changes to the branch
-        run: |
-          git push origin HEAD:${GITHUB_REF#refs/heads/}
-          
       - name: Reset the tag to the newest commit
         run: |
           # Delete the previous tag
