@@ -22,17 +22,17 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
+
+      - name: Checkout latest main branch
+        run: |
+          git checkout main
+          git pull origin main
           
       - name: Check Branch Checkout
         run: |
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
           echo "Git status: $(git status)"
           echo "Git log: $(git log -1)"
-
-      - name: Checkout latest main branch
-        run: |
-          git checkout main
-          git pull origin main
           
       - uses: actions/setup-node@v4
         with:
