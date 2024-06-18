@@ -22,16 +22,6 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
-
-      - name: Fetch latest changes and tags
-        run: |
-          git fetch origin main
-          git fetch --tags
-
-      - name: Checkout latest main branch
-        run: |
-          git checkout main
-          git pull origin main
           
       - name: Check Branch Checkout
         run: |
@@ -64,25 +54,17 @@ jobs:
           
           # Commit the changes
           git commit -m "Update package.json version"
-
-      # - name: Reset the tag to the newest commit
-      #   run: |
-      #     # Delete the previous tag
-      #     git tag --delete ${GITHUB_REF_NAME}
-      #     git push origin :refs/tags/${GITHUB_REF_NAME}
-          
-      #     # Create and push the new tag
-      #     git tag ${GITHUB_REF_NAME}
-      #     git push origin --tags
-          
-      # - name: Extract tag name
-      #   id: extract_tag
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
-
-      - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Reset the tag to the newest commit
         run: |
-          echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > ~/.npmrc
-          npm publish
+          # Delete the previous tag
+          git tag --delete ${GITHUB_REF_NAME}
+          git push origin :refs/tags/${GITHUB_REF_NAME}
+          
+          # Create and push the new tag
+          git tag ${GITHUB_REF_NAME}
+          git push origin --tags
+          
+      - name: Extract tag name
+        id: extract_tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
