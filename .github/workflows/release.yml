@@ -27,6 +27,30 @@ jobs:
         run: |
           git fetch origin main
           git fetch --tags
+
+      - name: Increment version
+        id: increment_tag
+        run: |
+          # Get the latest tag
+          latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+          
+          # Extract the parts of the version
+          IFS='.' read -r -a parts <<< "${latest_tag//v/}"
+          major=${parts[0]}
+          minor=${parts[1]}
+          patch=${parts[2]}
+          
+          # Increment the patch version
+          if [[ "${GITHUB_REF_NAME}" == *"-beta"* ]]; then
+            patch=$((patch+1))
+            new_tag="v${major}.${minor}.${patch}-beta.1"
+          else
+            patch=$((patch+1))
+            new_tag="v${major}.${minor}.${patch}"
+          fi
+          
+          echo "New tag: ${new_tag}"
+          echo "::set-output name=new_tag::${new_tag}"
           
       - name: Check Branch Checkout
         run: |
@@ -59,21 +83,6 @@ jobs:
           
           # Commit the changes
           git commit -m "Update package.json version"
-          
-      # - name: Reset the tag to the newest commit
-      #   run: |
-      #     # Delete the previous tag
-      #     git tag --delete ${GITHUB_REF_NAME}
-      #     git push origin :refs/tags/${GITHUB_REF_NAME}
-          
-      #     # Create and push the new tag
-      #     git tag ${GITHUB_REF_NAME}
-      #     git push origin --tags
-          
-      # - name: Extract tag name
-      #   id: extract_tag
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
 
       - name: Publish to npm
         env:
